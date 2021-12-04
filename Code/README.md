@@ -9,28 +9,28 @@ the disk, the default function will automatically decode the file and returns th
 
 To use the UI, make the project and use the following command:
 
-Creating a new disk with its name
+Creating a new disk with its name: 
 ./UI_Test -newdisk {DiskName}
 
-Listing the content and usage of a disk
+Listing the content and usage of a disk: 
 ./UI_Test -ls {DiskName}
 
-Saving a file to the disk
+Saving a file to the disk: 
 ./UI_Test -save {DiskName} {OriginalFileName} {FileNameInVFS}
 
-Deleting a file in the disk
+Deleting a file in the disk: 
 ./UI_Test -rm {DiskName} {FileNameInVFS}
 
-Loading a file from the disk
+Loading a file from the disk: 
 ./UI_Test -load {DiskName} {FileName} {FileNameInVFS}
 
-Loading a file from the disk, without decoding
+Loading a file from the disk, without decoding: 
 ./UI_Test -load_NoDecode {DiskName} {FileName} {FileNameInVFS}
 
-Encoding a file
+Encoding a file: 
 ./UI_Test -encode {ASCIIFileName} {TrainBigramFileName}
 
-Decoding a file
+Decoding a file: 
 ./UI_Test -decode {ASCIIFileName} {TrainBigramFileName}
 
 
