@@ -1,34 +1,50 @@
-EC440 -HW5 VFS virtual file system implemented on the Linux file system
-U68417996 lzy2022@bu.edu
+EC504 2021 Fall Project VFS DropBox-like storage on the Linux file system
 
-	The submission files contains a series of functions that can set up a VFS and provide APIs 
-to read and write files. The VFS has a data space ~30MB and it is also the maximum space for a 
-single file (maximum file number is 64). User can create and access the files using the filename 
-and file descripter (maximun 36 file descripter at the same time). The VFS is interacting with the
-disk in terms of blocks(4kb each block), and the SuperBlock structure is stored in the first block
-on the disk. Each inode contains 20 direct block storage and 40 single indeirct block storage, which
-can allocate more than 40MB storage. All the inode IO is stored on the first 3~67 (total 64 inodes) blocks.
-The inode is read and writen back whenever the program is doing file IO. The bit map is also writen back
-whenever new block is being allocated or freed. So any matadate is keep updated and saved from accidental
-system failure.
-	The bitmap is located on the 2nd block of the disk and stored as uint_8 array (length is <max block # / 8>).
-The bit map is accessed bitwisely through bitwise & and | operation to find the correct block to allocate/free. 
-	To implement 40MB data storage, one way (although I did not use) I can come up with is to put a 
-"shell" on the provided disk read/write function. If the program is accessing a block with # larger than
-max block # of a single disk,the shelled disk read/write function should close the current disk, open the 
-other disk (disk B), read/write on the other disk with <offset = accessing # - max block #>. After finishing the IO,
-the shelled function then closes disk B, reopen the original disk, and eventually return to normal process.
+	
+The submission files contains a series of functions that can use Trained Bigram to encode/decode
+files, create VFS disk and an UI to read, write and delete files from the VFS disk. Each VFS disk has
+ a data space ~33MB and it is also the maximum space for a single file (maximum file number is 64).
+The VFS is interacting with the disk in terms of blocks(4kb each block). When loading files out from 
+the disk, the default function will automatically decode the file and returns the original file.
+
+To use the UI, make the project and use the following command:
+
+Creating a new disk with its name
+./UI_Test -newdisk {DiskName}
+
+Listing the content and usage of a disk
+./UI_Test -ls {DiskName}
+
+Saving a file to the disk
+./UI_Test -save {DiskName} {OriginalFileName} {FileNameInVFS}
+
+Deleting a file in the disk
+./UI_Test -rm {DiskName} {FileNameInVFS}
+
+Loading a file from the disk
+./UI_Test -load {DiskName} {FileName} {FileNameInVFS}
+
+Loading a file from the disk, without decoding
+./UI_Test -load_NoDecode {DiskName} {FileName} {FileNameInVFS}
+
+Encoding a file
+./UI_Test -encode {ASCIIFileName} {TrainBigramFileName}
+
+Decoding a file
+./UI_Test -decode {ASCIIFileName} {TrainBigramFileName}
 
 
 submitted files:
+	TrBigram.c
+	TrBigram.h
+	UI_Test.c
 	fs.c
 	fs.h
 	disk.c
 	disk.h
 	makefile
 	README.md
+	//Testing .txt files
 
-Outside Source:
-	no outer sources used for this HW5, implemented several suggestions in discussion slides 
 
 
