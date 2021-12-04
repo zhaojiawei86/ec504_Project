@@ -1,4 +1,4 @@
-EC504 2021 Fall Project VFS DropBox-like storage on the Linux file system
+EC504 2021 Fall Project DropBox-like storage on the Linux file system
 
 	
 The submission files contains a series of functions that can use Trained Bigram to encode/decode
