@@ -8,6 +8,8 @@
 #include <string.h>
 
 #include "TrBigram.h"
+#include "fs.h"
+#include "disk.h"
 
 int ascii2Bigram(uint8_t *bigBuff, char *ascBuff, int n)
 {

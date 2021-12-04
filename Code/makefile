@@ -1,8 +1,8 @@
-override CFLAGS := -std=gnu99 -O0 -g $(CFLAGS)
+override CFLAGS := -std=gnu99 -O0 -w $(CFLAGS)
 
-fs.o: fs.c fs.h disk.c disk.h
+UI_Test: UI_Test.c TrBigram.c fs.c disk.c
 
 .PHONY: clean
 
 clean:
-	rm -f fs.o
+	rm -f UI_Test

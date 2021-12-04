@@ -436,6 +436,10 @@ int fs_delete(const char *name)
     //
     Sblock->file_name[g][0] = '\0';
     Sblock->inode_metadata_blocks -= 1;
+    int l = 0;
+    for(l = 0; l < MAX_FILE_NUM; l++)
+        if(strcmp(name, Sblock->file_name[l]) == 0)
+            strcpy(Sblock->file_name[l], "");
     return 0;
 }
 
@@ -593,13 +597,3 @@ int fs_truncate(int fd, off_t length)
     free(node);
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
