@@ -83,6 +83,7 @@ static void save_bitmap(uint8_t *buffer)
 {
     block_write(bitmap_offset, (void*)buffer);
 }
+//Check if a specific bit is 1/0
 static bool check_bitmap_bit(uint8_t *bitmap ,int block_offset)
 {
     int element = block_offset/BYTE_SIZE;
@@ -91,6 +92,7 @@ static bool check_bitmap_bit(uint8_t *bitmap ,int block_offset)
         return true;
     return false;
 }
+//Set a bit in the bitmap to be 1
 static bool set_bitmap_bit(uint8_t *bitmap ,int block_offset)
 {
     int element = block_offset/BYTE_SIZE;
@@ -98,6 +100,7 @@ static bool set_bitmap_bit(uint8_t *bitmap ,int block_offset)
     bitmap[element] = (bitmap[element] | (1<<offset));
     Sblock->used_block_bitmap_count += 1;
 }
+//Set a bit in the bitmap to be 1
 static bool free_bitmap_bit(uint8_t *bitmap ,int block_offset)
 {
     int element = block_offset/BYTE_SIZE;
@@ -105,28 +108,7 @@ static bool free_bitmap_bit(uint8_t *bitmap ,int block_offset)
     bitmap[element] = (bitmap[element] & (~(1<<offset)));
     Sblock->used_block_bitmap_count -= 1;
 }
-
-//Using reference counter, each # cost 8 bit u_int8
-static bool check_bitmap_RC(uint8_t *bitmap ,int block_offset)
-{
-    if(bitmap[block_offset] != 0)
-        return true;
-    return false;
-}
-static bool set_bitmap_RC(uint8_t *bitmap ,int block_offset)
-{
-    if(bitmap[block_offset] == 0)
-        Sblock->used_block_bitmap_count += 1;
-    bitmap[block_offset] += 1;
-}
-static bool free_bitmap_RC(uint8_t *bitmap ,int block_offset)
-{
-    if(bitmap[block_offset] == 0)
-        Sblock->used_block_bitmap_count -= 1;
-    bitmap[block_offset] -= 1;
-}
-
-
+//Get the block index of a specific byte in the file
 static unsigned int get_inode_bnum(unsigned int byte_num)
 {
     return byte_num/BLOCK_SIZE;
@@ -274,7 +256,7 @@ static int free_1block(struct inode* node)
     }
     return 0;
 }
-
+//Create a disk with a given name
 int make_fs(const char *disk_name)
 {
     if(make_disk(disk_name) != 0)
@@ -319,7 +301,7 @@ int make_fs(const char *disk_name)
     close_disk();
     return 0;
 }
-
+//Mount a disk with the disk name
 int mount_fs(const char *disk_name)
 {
     int a;
@@ -338,7 +320,7 @@ int mount_fs(const char *disk_name)
         files_f[a].is_used = false;
     return 0;
 }
-
+//Unmount the disk
 int umount_fs(const char *disk_name)
 {
     if(mounted != true)
@@ -350,7 +332,7 @@ int umount_fs(const char *disk_name)
     close_disk(disk_name);
     return 0;
 }
-
+//Open a file in the disk, return the file identifier number
 int fs_open(const char *name)
 {
     int b = 0, c = 0;
@@ -373,7 +355,7 @@ int fs_open(const char *name)
     files_f[b].offset = 0;
     return b;
 }
-
+//Close a file with its identifier number
 int fs_close(int fd)
 {
     if(fd >= MAX_OP_FILE)
@@ -385,7 +367,7 @@ int fs_close(int fd)
     files_f[fd].is_used = false;
     return 0;
 }
-
+//Create a new file in the disk
 int fs_create(const char *name)
 {
     int t;
@@ -407,7 +389,7 @@ int fs_create(const char *name)
         }
     return -1;//unexpected
 }
-
+//Delete a file in the disk
 int fs_delete(const char *name)
 {
     int g = 0, countg = 0;
@@ -442,7 +424,7 @@ int fs_delete(const char *name)
             strcpy(Sblock->file_name[l], "");
     return 0;
 }
-
+//Read n bytes of data from the file into the buffer
 int fs_read(int fd, void *buf, size_t nbyte)
 {
     if(files_f[fd].is_used == false)
@@ -480,7 +462,7 @@ int fs_read(int fd, void *buf, size_t nbyte)
     free(buffer);
     return amount;
 }
-
+//Write n bytes of data into the file from the buffer
 int fs_write(int fildes, void *buf, size_t nbyte)
 {
     if(files_f[fildes].is_used == false)
@@ -534,7 +516,7 @@ int fs_write(int fildes, void *buf, size_t nbyte)
     free(node_a);
     return amount;
 }
-
+//Get the size of a file
 int fs_get_filesize(int fd)
 {
     int size;
@@ -547,7 +529,7 @@ int fs_get_filesize(int fd)
     free(node);
     return size;
 }
-
+//List all existing file and their names
 int fs_listfiles(char ***files)
 {
     if(mounted == false)
@@ -561,7 +543,7 @@ int fs_listfiles(char ***files)
 	(*files)[countp] = NULL;
     return 0;
 }
-
+//Seek to a specific place in a file
 int fs_lseek(int fd, off_t offset)
 {
     if(files_f[fd].is_used == false)
@@ -573,7 +555,7 @@ int fs_lseek(int fd, off_t offset)
     files_f[fd].offset = offset;
     return 0;
 }
-
+//Truncate a file at a specific offset
 int fs_truncate(int fd, off_t length)
 {
     struct inode *node;
