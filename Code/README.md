@@ -33,6 +33,8 @@ Encoding a file:
 Decoding a file: 
 ```./UI_Test -decode {ASCIIFileName} {TrainBigramFileName}```
 
+**Would output ```Segmentation Fault``` if the user try to read from a non-existing file.
+
 
 submitted files:
 	TrBigram.c
